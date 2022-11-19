@@ -1,0 +1,54 @@
+.html_form {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 30px auto;
+    background: #98a6a8;
+    border-radius: 20px;
+    padding: 20px;
+}
+.html_form > * {
+    margin: 20px;
+}
+
+.html_form:nth-child(even) {
+    background: #c1d5d7;
+}
+
+.html_form ul {
+    list-style: none;
+    padding: 0;
+}
+.html_form h3 {
+    text-transform: uppercase;
+}
+.html_form li:nth-child(n) {
+    background: #c1d5d7;
+    margin: 5px 0;
+    border-radius: 10px;
+}
+
+.html_form li:nth-child(odd) {
+    background: #98a6a8;
+}
+
+.html_form li > label {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+}
+
+.html_form li > label > span:first-child {
+    width: 100px;
+}
+.html_form li > label > span:only-child, .edit_panel li > label > select:only-child {
+    margin: 20px;
+}
+
+.html_form input, .html_form textarea {
+    width: 90%;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}

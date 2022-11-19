@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+
+<?php
+require_once 'core/easy/EasyHelper.php';
+include 'autoloader.php';
+
+use DenisPm\EasyFramework\core\easy\EasyHelper;
+use BotConstructor\ORM\Migrator;
+
+ob_implicit_flush();
+
+if (@$argv[1] === 'new'){
+    $migrationsTask = new Migrator($argv);
+    $migrationsTask->newMigration();
+}
+
+if (@$argv[1] === 'migrate'){
+    $migrationsTask = new Migrator($argv);
+    $argumentsCount = $migrationsTask->getArgumentsCount();
+    if($argumentsCount === 2){
+        $migrationsTask->allMigrationsUp();
+    }
+
+    if($argumentsCount === 3){
+        $migrationsTask->allMigrationsTasks();
+    }
+
+    if($argumentsCount === 4 && is_numeric($argv[3])){
+        $migrationsTask->oneTaskMigration();
+    }
+
+}
