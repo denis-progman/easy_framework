@@ -14,17 +14,18 @@
 use DenisPm\EasyFramework\core\HTML\HTMLElement;
 use DenisPm\EasyFramework\core\MainRepository;
 use DenisPm\EasyFramework\HTML\Forms;
-
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-require_once 'vendor/autoload.php';
-$request = new MainRepository('htmltags');
-echo "<pre>";
-print_r($request->getOneDataIntelligent('id', '=', 4));
-print_r(Forms::AUTHORISATION);
 
+require_once 'vendor/autoload.php';
 
 try {
+    $request = new MainRepository('htmltags');
+    echo "<pre>";
+    print_r($request->getOneDataIntelligent('id', '=', 4));
+//    print_r(Forms::AUTHORISATION);
+
+
     $template = new HTMLElement(Forms::AUTHORISATION);
     echo $template->getHTML();
 } catch (Throwable $e) {

@@ -32,6 +32,22 @@ class MainRepository
     }
 
     /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    /**
+     * @param string $table
+     */
+    public function setTable(string $table): void
+    {
+        $this->table = $table;
+    }
+
+    /**
      * @throws Exception
      */
     public function getData(int|string $dataId, ?string $table = null): string|array|bool|null
@@ -57,7 +73,6 @@ class MainRepository
         $firstlyData = self::$DB->select($this->table)
             ->makeWhere($column, $operator, $value)
             ->send();
-
         foreach ($firstlyData as $keyOneFirstly => $oneFirstlyData) {
             $firstlyData[$keyOneFirstly] = $this->recursiveSelector($oneFirstlyData, self::$DB->getTables());
         }
@@ -93,18 +108,18 @@ class MainRepository
         return $this->recursiveSelector($firstlyData, self::$DB->getTables());
     }
 
-    private function recursiveSelector($firstlyData, $tables) {
+    private function recursiveSelector($firstlyData, array $tables): string|array|int|float
+    {
+        if (!is_array($firstlyData)) {
+            return $firstlyData;
+        }
         foreach ($firstlyData as $keyOneParam => $oneParam) {
+            if (empty($oneParam)) {
+                continue;
+            }
             $table = "{$keyOneParam}" . self::TABLE_POSTFIX;
             if (is_numeric($oneParam) && in_array($table, $tables)) {
-
-//                if (isset(self::$requestsCache[$cacheName = "$table-$oneParam"])) {
-//                    $firstlyData[$keyOneParam] = self::$requestsCache[$cacheName];
-//                } else {
-//                    $firstlyData[$keyOneParam] = self::$requestsCache[$cacheName] = $this->getData($oneParam, $table);
-//                }
-
-                $firstlyData[$keyOneParam] = $this->recursiveSelector($firstlyData[$keyOneParam], $tables);
+                $firstlyData[$keyOneParam] = $this->recursiveSelector($oneParam, $tables);
             }
             else if (
                 !empty($nextTable = array_filter(
@@ -114,20 +129,26 @@ class MainRepository
                     }
                 ))
             ) {
-                print_r($nextTable);
                 sort($nextTable);
-
                 $table = $this->table = $nextTable[0];
                 $keyOneParam = explode(self::CONNECTING_TABLE_DIVIDER, $table)[1];
-                print_r($keyOneParam);
+                $subTablesData = $this->getAllDataIntelligent($keyOneParam, "=", $firstlyData['id']);
+                $this->table = $keyOneParam . self::TABLE_POSTFIX;
 
-//                if (isset(self::$requestsCache[$cacheName = "$table-$oneParam"])) {
-//                    $firstlyData[$keyOneParam] = self::$requestsCache[$cacheName];
-//                } else {
-//                    $firstlyData[$keyOneParam] = self::$requestsCache[$cacheName] = $this->getAllDataIntelligent($keyOneParam, '=', $oneParam);
-//                }
-
-                $firstlyData[$keyOneParam] = $this->recursiveSelector($firstlyData[$keyOneParam], $tables);
+                if (empty($subTablesData)) {
+                    continue;
+                }
+                  foreach ($subTablesData as $subTablesDataKey => $oneSubTablesData) {
+                      if (empty($oneSubTablesData)) {
+                          continue;
+                      }
+                      $subTablesData[$subTablesDataKey] = $this->getAllDataIntelligent(
+                          'id',
+                          "=",
+                          $oneSubTablesData[$this->table]
+                      )[0];
+                  }
+                $firstlyData[$this->table] = $subTablesData;
             }
         }
         return $firstlyData;

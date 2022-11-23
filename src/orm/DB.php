@@ -21,6 +21,8 @@ class DB extends ModelFather
 
     protected ?PDOStatement $request = null;
 
+    protected static ?array $requestsCache = null;
+
     protected static ?array $config = null;
 
     private const SQL_PARAMS_DELIMITER = ", ";
@@ -55,6 +57,14 @@ class DB extends ModelFather
     {
         self::builder();
         $this->makeConnection($configs);
+    }
+
+    public function resetParams():void {
+        $this->sqlString =
+            $this->stringSet =
+                $this->limitString = '';
+        $this->requestType = null;
+        $this->paramsSet = [];
     }
 
     /**
@@ -119,8 +129,7 @@ class DB extends ModelFather
      */
     public function select(string $table, array $selectStack = []): self // запрос к базе
     {
-        $this->paramsSet = [];
-        $this->stringSet = "";
+        $this->resetParams();
         $selectStackString = !empty($selectStack) ? implode(', ', $selectStack) : '*';
         $this->sqlString = "SELECT {$selectStackString} FROM `{$table}` {$this->stringSet}";
         $this->requestType = self::SELECT_TYPE_REQUEST;
@@ -142,8 +151,7 @@ class DB extends ModelFather
      */
     public function insert(string $table, array $params): self // для insert и update
     {
-        $this->paramsSet = [];
-        $this->stringSet = "";
+        $this->resetParams();
         if (!empty($params)) {
             $this->prepareParamsSet($params);
         }
@@ -157,8 +165,7 @@ class DB extends ModelFather
      */
     public function count(string $table): self // Выводит количество записей
     {
-        $this->paramsSet = [];
-        $this->stringSet = "";
+        $this->resetParams();
         $this->sqlString = "SELECT `COUNT(*)` AS 'count' FROM `{$table}` {$this->stringSet}";
         $this->requestType = self::ONE_SELECT_TYPE_REQUEST;
         return $this;
@@ -189,6 +196,7 @@ class DB extends ModelFather
      */
     public function update(string $table, array $params = []): self
     {
+        $this->resetParams();
         if (!empty($params)) {
             $this->prepareParamsSet($params);
         }
@@ -201,7 +209,7 @@ class DB extends ModelFather
      * @throws Exception
      */
     public function IUBySomeThing(string $table, array $insertParams, array $majorKeys = []): self {
-
+        $this->resetParams();
         $request = @$this->select($table);
         $majorCounter = 0;
         $majorKey = null;
@@ -238,9 +246,6 @@ class DB extends ModelFather
      */
     public function prepareParamsSet(array $requestParams): self
     {
-        $this->stringSet = '';
-        $this->paramsSet = [];
-
         if (!empty($requestParams)) {
             foreach ($requestParams as $keyParam => $oneParam) {
                 $this->stringSet .= " `$keyParam` = ?" . self::SQL_PARAMS_DELIMITER;
@@ -319,7 +324,11 @@ class DB extends ModelFather
     public function send(): string|array|bool|null
     {
         return self::sqlErrorChecker(function () {
+            $cacheName = md5($this->sqlString . print_r($this->paramsSet, true));
             if (!$this->sendWithOutRequest){
+                if ($cacheName && isset(self::$requestsCache[$cacheName])) {
+                    return self::$requestsCache[$cacheName];
+                }
                 $this->sqlString = $this->sqlString . $this->limitString;
                 $this->request = $this->connection->prepare($this->sqlString);
                 if (!$this->request->execute($this->paramsSet)) {
@@ -331,10 +340,10 @@ class DB extends ModelFather
                 return $this->dataWithOutRequest;
             }
             return match ($this->requestType) {
-                self::ONE_SELECT_TYPE_REQUEST => $this->lastResult = $this->request->fetch(PDO::FETCH_ASSOC),
-                self::SELECT_TYPE_REQUEST => $this->lastResult = $this->request->fetchAll(PDO::FETCH_ASSOC),
-                self::INSERT_TYPE_REQUEST => $this->connection->lastInsertId(),
-                self::UPDATE_TYPE_REQUEST => $this->updateId,
+                self::ONE_SELECT_TYPE_REQUEST => self::$requestsCache[$cacheName] = $this->lastResult = $this->request->fetch(PDO::FETCH_ASSOC),
+                self::SELECT_TYPE_REQUEST => self::$requestsCache[$cacheName] = $this->lastResult = $this->request->fetchAll(PDO::FETCH_ASSOC),
+                self::INSERT_TYPE_REQUEST => self::$requestsCache[$cacheName] = $this->connection->lastInsertId(),
+                self::UPDATE_TYPE_REQUEST =>  self::$requestsCache[$cacheName] = $this->updateId,
                 default => true,
             };
         });
