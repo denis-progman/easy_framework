@@ -8,14 +8,12 @@ class HTMLConstants
 
     const ATTRIBUTES = 'attributes';
 
-    const VALIDATION = 'validation';
-
-    const VALIDATION_CONDITION = 'condition';
+    const PATTERN = 'pattern';
 
     const HUMAN_NAME = 'error';
 
-    const CHILDREN = 'children';
+    const CHILDREN = 'htmltags';
 
-    const INNER_HTML = 'innerText';
+    const INNER_HTML = 'innerHtml';
 
 }

@@ -12,8 +12,9 @@ class HTMLElement
     private DOMDocument $DOMDocument;
 
     private ?DOMElement $tag = null;
+
     /**
-     * @param ?array $tagData
+     * @param array|null $tagData
      * @throws Exception
      */
     public function __construct(?array $tagData = null)
@@ -25,24 +26,23 @@ class HTMLElement
         }
     }
 
+    /**
+     * @return ?DOMElement
+     */
+    public function getTag(): ?DOMElement
+    {
+        return $this->tag;
+    }
+
     public function getDOMDocument(): DOMDocument
     {
         return $this->DOMDocument;
     }
 
     /**
-     * @return DOMElement
-     */
-    public function getTag(): DOMElement
-    {
-        return $this->tag;
-    }
-
-    /**
      * @param array $tagData
-     * @return self
+     * @return DOMElement
      * @throws DOMException
-     * @throws Exception
      */
     public function build(array $tagData): DOMElement
     {

@@ -1,13 +1,16 @@
 .html_form {
+    width: 60vw;
+    min-width: 300px;
     display: grid;
     grid-template-columns: 1fr;
+    justify-items: center;
     margin: 30px auto;
     background: #98a6a8;
     border-radius: 20px;
     padding: 20px;
 }
 .html_form > * {
-    margin: 20px;
+    margin: 20px 0;
 }
 
 .html_form:nth-child(even) {
@@ -48,7 +51,13 @@
 .html_form input, .html_form textarea {
     width: 90%;
     padding: 10px 20px;
-    margin-top: 10px;
     border-radius: 15px;
     font-size: 12px;
+}
+
+.html_form button {
+    padding: 5px 2em;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-top: 10px;
 }

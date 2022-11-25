@@ -1,21 +1,24 @@
 <?php
 
-namespace DenisPm\EasyFramework\HTML;
-
-use DenisPm\EasyFramework\core\HTML\HTMLConstants;
+namespace DenisPm\EasyFramework\core\HTML;
 
 class Forms
 {
-    const SUMMIT = [
-        HTMLConstants::TAG => "button",
+    const LOGIN = [
+        HTMLConstants::TAG => "login_form",
         HTMLConstants::ATTRIBUTES => [
-            "type" => "submit",
+            "method" => "post",
+            "class" => 'html_form',
         ],
-        HTMLConstants::INNER_HTML => 'Submit'
+        HTMLConstants::CHILDREN => [
+            Fields::LOGIN,
+            Fields::PASSWORD,
+            Fields::SUBMIT,
+        ]
     ];
 
     const AUTHORISATION = [
-        HTMLConstants::TAG => "form",
+        HTMLConstants::TAG => "authorisation_form",
         HTMLConstants::ATTRIBUTES => [
             "method" => "post",
             "class" => 'html_form',
@@ -25,7 +28,7 @@ class Forms
             Fields::PASSWORD,
             Fields::TEL,
             Fields::EMAIL,
-            self::SUMMIT,
+            Fields::SUBMIT,
         ]
     ];
 }
