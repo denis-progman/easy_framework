@@ -16,4 +16,6 @@ class HTMLConstants
 
     const INNER_HTML = 'innerHtml';
 
+    const FORM_NAME = 'form_name';
+
 }

@@ -50,6 +50,15 @@ class HTMLElement
         if (!$this->tag) {
             $this->tag = $tag;
         }
+
+        if ($tagData[HTMLConstants::TAG] == 'form' && isset($tagData[HTMLConstants::FORM_NAME])) {
+            $nameTag = $this->DOMDocument->createElement('input');
+            $nameTag->setAttribute('type', 'hidden');
+            $nameTag->setAttribute('name', HTMLConstants::FORM_NAME);
+            $nameTag->setAttribute('value', $tagData[HTMLConstants::FORM_NAME]);
+            $tag->appendChild($nameTag);
+        }
+
         if (isset($tagData[HTMLConstants::ATTRIBUTES])) {
             foreach ($tagData[HTMLConstants::ATTRIBUTES] as $attribute => $attributeValue) {
                 if (!$attribute || !is_string($attribute)) {
@@ -76,6 +85,10 @@ class HTMLElement
                     $tag->setAttribute($attribute, $attributeValue);
                 }
             }
+        }
+
+        if (isset($tagData[HTMLConstants::PATTERN])) {
+            $tag->setAttribute("pattern", $tagData[HTMLConstants::PATTERN]);
         }
 
         if (isset($tagData[HTMLConstants::INNER_HTML])) {
