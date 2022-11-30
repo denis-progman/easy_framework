@@ -13,6 +13,7 @@ class HTMLElement
 
     private ?DOMElement $tag = null;
 
+
     /**
      * @param array|null $tagData
      * @throws Exception
@@ -51,12 +52,15 @@ class HTMLElement
             $this->tag = $tag;
         }
 
-        if ($tagData[HTMLConstants::TAG] == 'form' && isset($tagData[HTMLConstants::FORM_NAME])) {
+        if ($tagData[HTMLConstants::TAG] == 'form' && isset($tagData[HTMLConstants::FORM_NAME_KEY])) {
             $nameTag = $this->DOMDocument->createElement('input');
             $nameTag->setAttribute('type', 'hidden');
-            $nameTag->setAttribute('name', HTMLConstants::FORM_NAME);
-            $nameTag->setAttribute('value', $tagData[HTMLConstants::FORM_NAME]);
+            $nameTag->setAttribute('name', HTMLConstants::FORM_NAME_KEY);
+            $nameTag->setAttribute('value', $tagData[HTMLConstants::FORM_NAME_KEY]);
             $tag->appendChild($nameTag);
+
+            $this->tag->setAttribute('method', HTMLConstants::FORM_METHOD_TYPE);
+            $this->tag->setAttribute('action', HTMLConstants::FORM_ACTION_URL);
         }
 
         if (isset($tagData[HTMLConstants::ATTRIBUTES])) {

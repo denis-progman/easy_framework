@@ -2,17 +2,31 @@
 
 namespace DenisPm\EasyFramework\core;
 
+use DenisPm\EasyFramework\core\HTML\Forms;
+use DenisPm\EasyFramework\core\HTML\HTMLConstants;
+use Exception;
+
 class MainController
 {
     const REQUEST_TYPE = null;
 
-    protected string $requestDataType;
+    protected array $requestData;
 
-    public function __construct(?string $type = null)
+    protected string $formName;
+
+    /**
+     * @throws Exception
+     */
+    public function __construct(?array $request = null)
     {
-        if (isset(${'_' . ($type ?: self::REQUEST_TYPE)}[Constants::REQUEST_DATA_MARK])) {
-            $this->requestDataType = ${'_' . self::REQUEST_TYPE}[Constants::REQUEST_DATA_MARK];
-            unset(${'_' . self::REQUEST_TYPE}[Constants::REQUEST_DATA_MARK]);
+        print_r($request[HTMLConstants::FORM_NAME_KEY]);
+        if (isset(Forms::AVAILABLE_LIST[$request[HTMLConstants::FORM_NAME_KEY]])) {
+            $this->formName = $request[HTMLConstants::FORM_NAME_KEY];
+            unset($request[HTMLConstants::FORM_NAME_KEY]);
+            Validation::FormValidate($this->formName, $request);
+            $this->requestData = $request;
+        } else {
+            throw new Exception("Unknown form");
         }
     }
 }

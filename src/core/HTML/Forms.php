@@ -4,11 +4,14 @@ namespace DenisPm\EasyFramework\core\HTML;
 
 class Forms
 {
+    const AVAILABLE_LIST = [
+        self::AUTHORISATION[HTMLConstants::FORM_NAME_KEY] => self::AUTHORISATION,
+        self::LOGIN[HTMLConstants::FORM_NAME_KEY] => self::LOGIN,
+    ];
     const LOGIN = [
         HTMLConstants::TAG => "form",
-        HTMLConstants::FORM_NAME => "login_form",
+        HTMLConstants::FORM_NAME_KEY => "login",
         HTMLConstants::ATTRIBUTES => [
-            "method" => "post",
             "class" => 'html_form',
         ],
         HTMLConstants::CHILDREN => [
@@ -20,9 +23,8 @@ class Forms
 
     const AUTHORISATION = [
         HTMLConstants::TAG => "form",
-        HTMLConstants::FORM_NAME => "authorisation_form",
+        HTMLConstants::FORM_NAME_KEY => "authorisation",
         HTMLConstants::ATTRIBUTES => [
-            "method" => "post",
             "class" => 'html_form',
         ],
         HTMLConstants::CHILDREN => [

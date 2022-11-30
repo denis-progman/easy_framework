@@ -23,7 +23,7 @@ class Fields
             "class" => [],
             "id" => '',
         ],
-        HTMLConstants::PATTERN => '/^[\w\D\-\_]{2,50}@[\w\D\-\_]{2,50}\.\w{2,5}$/ui',
+        HTMLConstants::PATTERN => '[\w\D\-\_]{2,50}@[\w\D\-\_]{2,50}\.\w{2,5}',
         HTMLConstants::HUMAN_NAME => "e-mail",
     ];
     const TEL = [
@@ -37,7 +37,7 @@ class Fields
             "class" => [],
             "id" => '',
         ],
-        HTMLConstants::PATTERN => '/^[\w\D\-\_]{2,50}@[\w\D\-\_]{2,50}\.\w{2,5}$/ui',
+        HTMLConstants::PATTERN => '[\w\D\-\_]{2,50}@[\w\D\-\_]{2,50}\.\w{2,5}',
         HTMLConstants::HUMAN_NAME => "name",
     ];
     const LOGIN = [
@@ -51,7 +51,7 @@ class Fields
             "class" => [],
             "id" => '',
         ],
-        HTMLConstants::PATTERN => "/^[\w\s]{2,100}$/ui",
+        HTMLConstants::PATTERN => "[\w\d]{2,100}",
         HTMLConstants::HUMAN_NAME => "login",
     ];
 
@@ -67,6 +67,6 @@ class Fields
             "id" => '',
         ],
         HTMLConstants::HUMAN_NAME => "password",
-        HTMLConstants::PATTERN => "/^[\w\s]{2,100}$/ui",
+        HTMLConstants::PATTERN => ".{8,100}",
     ];
 }

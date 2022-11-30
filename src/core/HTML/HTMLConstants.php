@@ -16,6 +16,11 @@ class HTMLConstants
 
     const INNER_HTML = 'innerHtml';
 
-    const FORM_NAME = 'form_name';
+    const FORM_NAME_KEY = 'form_name';
 
+    const FORM_METHOD_TYPE = 'POST';
+
+    const FORM_ACTION_URL = './src/api.php';
+
+    const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded';
 }
